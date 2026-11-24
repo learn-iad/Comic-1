@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Отдел продаж · Мини-комикс про Макса</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f4f6fa;
+      --bg-accent: linear-gradient(165deg, #eef2ff 0%, #f4f6fa 38%, #f8fafc 100%);
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --border: rgba(15, 23, 42, 0.08);
+      --border-strong: rgba(15, 23, 42, 0.14);
+      --caption-bg: rgba(255, 251, 235, 0.92);
+      --caption-ink: #422006;
+      --radius-panel: 20px;
+      --radius-bubble: 18px;
+      --shadow-panel: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 40px rgba(15, 23, 42, 0.07);
+      --ilya: #047857;
+      --ilya-ring: #a7f3d0;
+      --ilya-bubble: #ecfdf5;
+      --ilya-bubble-border: rgba(4, 120, 87, 0.22);
+      --denis: #1d4ed8;
+      --denis-ring: #bfdbfe;
+      --denis-bubble: #eff6ff;
+      --denis-bubble-border: rgba(29, 78, 216, 0.2);
+      --max-accent: #0891b2;
+      --max-ring: #67e8f9;
+      --max-bubble: #ecfeff;
+      --max-bubble-border: rgba(8, 145, 178, 0.28);
+      --bar-bg: rgba(255, 255, 255, 0.78);
+      --progress: linear-gradient(90deg, #10b981, #06b6d4);
+      --avatar-size: 40px;
+    }
+
+    body.dark {
+      --bg: #0c1018;
+      --bg-accent: linear-gradient(165deg, #0f1524 0%, #0c1018 50%, #0a0e14 100%);
+      --surface: #151b26;
+      --surface-soft: #1a2233;
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      --border: rgba(148, 163, 184, 0.12);
+      --border-strong: rgba(148, 163, 184, 0.22);
+      --caption-bg: rgba(251, 191, 36, 0.15);
+      --caption-ink: #fde68a;
+      --shadow-panel: 0 4px 32px rgba(0, 0, 0, 0.45);
+      --ilya-bubble: #0f2922;
+      --ilya-bubble-border: rgba(52, 211, 153, 0.25);
+      --denis-bubble: #0f1d38;
+      --denis-bubble-border: rgba(96, 165, 250, 0.25);
+      --max-bubble: #0c2430;
+      --max-bubble-border: rgba(34, 211, 238, 0.3);
+      --bar-bg: rgba(12, 16, 24, 0.82);
+      --progress: linear-gradient(90deg, #34d399, #38bdf8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      background-image: var(--bg-accent);
+      color: var(--ink);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      width: 100%;
+      background: var(--bar-bg);
+      backdrop-filter: blur(14px) saturate(1.2);
+      border-bottom: 1px solid var(--border-strong);
+    }
+
+    .topbar-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 52px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .brand-tag {
+      flex-shrink: 0;
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      color: #78350f;
+      border-radius: 8px;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 8px;
+    }
+
+    body.dark .brand-tag {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.15));
+      color: #fcd34d;
+    }
+
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .seg-group {
+      display: inline-flex;
+      background: var(--surface-soft);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .seg-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    body.dark .seg-btn.active {
+      background: #243044;
+      color: #f8fafc;
+    }
+
+    .btn-grid-only {
+      display: none;
+    }
+
+    @media (min-width: 820px) {
+      .btn-grid-only {
+        display: inline-block;
+      }
+    }
+
+    .icon-btn {
+      appearance: none;
+      background: var(--surface-soft);
+      color: var(--ink);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      width: 36px;
+      height: 36px;
+      font-size: 15px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.12s ease;
+    }
+
+    .icon-btn:hover {
+      transform: scale(1.04);
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 3px;
+      background: var(--border);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 11.1%;
+      background: var(--progress);
+      transition: width 0.25s ease;
+    }
+
+    .stage {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 14px 14px 28px;
+    }
+
+    .cast-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+      margin: 0 auto 16px;
+      max-width: 720px;
+    }
+
+    .cast-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 999px;
+      padding: 5px 14px 5px 5px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .cast-pill img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .cast-pill.role-ilya img { box-shadow: 0 0 0 2px var(--ilya-ring); }
+    .cast-pill.role-denis img { box-shadow: 0 0 0 2px var(--denis-ring); }
+    .cast-pill.role-max img { box-shadow: 0 0 0 2px var(--max-ring); }
+
+    .cast-role {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .comic-grid.mode-feed {
+      display: grid;
+      grid-template-columns: minmax(0, 520px);
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .comic-grid.mode-feed .panel-frame {
+      aspect-ratio: var(--asp, 4 / 5);
+      max-height: 52vh;
+      max-height: 52dvh;
+    }
+
+    .comic-grid.mode-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 820px) {
+      .comic-grid.mode-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+        align-items: start;
+      }
+      .comic-grid.mode-grid .panel-wide {
+        grid-column: 1 / -1;
+        max-width: 560px;
+        width: 100%;
+        justify-self: center;
+      }
+      .comic-grid.mode-grid .panel-frame {
+        aspect-ratio: var(--asp, 4 / 5);
+        max-height: 46vh;
+        max-height: 46dvh;
+      }
+    }
+
+    body.is-slides .cast-bar {
+      display: none;
+    }
+
+    body.is-slides .stage {
+      padding: 10px 14px 14px;
+      min-height: calc(100vh - 56px);
+      min-height: calc(100dvh - 56px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .comic-grid.mode-slides {
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .comic-grid.mode-slides .comic-panel {
+      display: none;
+    }
+
+    .comic-grid.mode-slides .comic-panel.is-active {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 120px);
+      max-height: calc(100dvh - 120px);
+    }
+
+    .comic-grid.mode-slides .panel-frame {
+      height: 44vh;
+      height: 44dvh;
+      min-height: 210px;
+      flex-shrink: 0;
+    }
+
+    .comic-grid.mode-slides .dialogue-zone {
+      overflow-y: auto;
+      flex: 1 1 auto;
+    }
+
+    @media (min-width: 620px) {
+      .comic-grid.mode-slides .comic-panel.is-active {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        align-items: stretch;
+        height: min(580px, calc(100vh - 120px));
+        height: min(580px, calc(100dvh - 120px));
+        max-height: none;
+      }
+
+      .comic-grid.mode-slides .panel-frame {
+        height: 100%;
+        border-bottom: none;
+        border-right: 1px solid var(--border-strong);
+      }
+
+      .comic-grid.mode-slides .dialogue-zone {
+        justify-content: center;
+        padding: 20px 18px;
+        gap: 14px;
+      }
+    }
+
+    .slide-nav {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 12px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    body.is-slides .slide-nav {
+      display: flex;
+    }
+
+    .nav-btn {
+      appearance: none;
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 9px 16px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.38;
+      cursor: default;
+      box-shadow: none;
+    }
+
+    .dots-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .dot-btn {
+      appearance: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 9px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .dot-btn.active {
+      background: var(--ink);
+      color: var(--surface);
+      border-color: transparent;
+    }
+
+    body.dark .dot-btn.active {
+      background: #38bdf8;
+      color: #0c1018;
+    }
+
+    @media (max-width: 440px) {
+      .dot-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+      }
+      .nav-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+    }
+
+    .comic-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-panel);
+      box-shadow: var(--shadow-panel);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      scroll-margin-top: 64px;
+    }
+
+    .panel-frame {
+      position: relative;
+      width: 100%;
+      background: #0f172a;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-strong);
+      cursor: zoom-in;
+    }
+
+    .panel-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .panel-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 3;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #f8fafc;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.02em;
+    }
+
+    .caption-box {
+      position: absolute;
+      z-index: 3;
+      top: 10px;
+      left: 10px;
+      background: var(--caption-bg);
+      color: var(--caption-ink);
+      backdrop-filter: blur(6px);
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+      line-height: 1.35;
+      border-radius: 10px;
+      max-width: calc(100% - 72px);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .dialogue-zone {
+      padding: 16px 14px;
+      background: var(--surface-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* —— Реплики с аватарами —— */
+    .bubble-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .bubble-row.align-left {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+
+    .bubble-row.align-right {
+      flex-direction: row-reverse;
+      justify-content: flex-start;
+    }
+
+    .bubble-row.align-center {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bubble-avatar {
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--surface);
+    }
+
+    .bubble-row.align-left .bubble-avatar.role-ilya {
+      box-shadow: 0 0 0 2.5px var(--ilya-ring), 0 4px 12px rgba(4, 120, 87, 0.15);
+    }
+    .bubble-row.align-left .bubble-avatar.role-denis,
+    .bubble-row.align-right .bubble-avatar.role-denis {
+      box-shadow: 0 0 0 2.5px var(--denis-ring), 0 4px 12px rgba(29, 78, 216, 0.12);
+    }
+    .bubble-row .bubble-avatar.role-ilya {
+      box-shadow: 0 0 0 2.5px var(--ilya-ring), 0 4px 12px rgba(4, 120, 87, 0.15);
+    }
+    .bubble-row .bubble-avatar.role-max {
+      box-shadow: 0 0 0 2.5px var(--max-ring), 0 0 16px rgba(34, 211, 238, 0.35);
+    }
+
+    .bubble-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: min(100%, calc(100% - var(--avatar-size) - 14px));
+      flex: 0 1 auto;
+    }
+
+    .bubble-row.align-center .bubble-stack {
+      max-width: min(100%, 480px);
+      align-items: center;
+    }
+
+    .bubble-row.align-right .bubble-stack {
+      align-items: flex-end;
+    }
+
+    .bubble-name {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 0 4px;
+    }
+
+    .bubble-name.name-ilya { color: var(--ilya); }
+    .bubble-name.name-denis { color: var(--denis); }
+    .bubble-name.name-max { color: var(--max-accent); }
+    body.dark .bubble-name.name-ilya { color: #6ee7b7; }
+    body.dark .bubble-name.name-denis { color: #93c5fd; }
+    body.dark .bubble-name.name-max { color: #67e8f9; }
+
+    .bubble-row.align-center .bubble-name {
+      text-align: center;
+    }
+
+    .speech-bubble {
+      position: relative;
+      padding: 11px 14px 12px;
+      border-radius: var(--radius-bubble);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .speech-bubble.role-ilya {
+      background: var(--ilya-bubble);
+      border-color: var(--ilya-bubble-border);
+      border-bottom-left-radius: 6px;
+    }
+
+    .speech-bubble.role-denis {
+      background: var(--denis-bubble);
+      border-color: var(--denis-bubble-border);
+    }
+
+    .align-left .speech-bubble.role-denis {
+      border-bottom-left-radius: 6px;
+    }
+
+    .align-right .speech-bubble.role-denis,
+    .align-right .speech-bubble.role-ilya {
+      border-bottom-right-radius: 6px;
+    }
+
+    .speech-bubble.role-max {
+      background: var(--max-bubble);
+      border-color: var(--max-bubble-border);
+      box-shadow: 0 2px 16px rgba(8, 145, 178, 0.12);
+    }
+
+    .align-left .speech-bubble.role-max {
+      border-bottom-left-radius: 6px;
+    }
+
+    .align-right .speech-bubble.role-max {
+      border-bottom-right-radius: 6px;
+    }
+
+    .align-center .speech-bubble.role-max {
+      border-radius: var(--radius-bubble);
+      text-align: center;
+    }
+
+    /* Хвостик к аватару */
+    .bubble-row.align-left .speech-bubble::after,
+    .bubble-row.align-right .speech-bubble::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      width: 14px;
+      height: 14px;
+      background: inherit;
+      border: inherit;
+      border-top: none;
+      border-right: none;
+      clip-path: polygon(0 100%, 100% 100%, 0 0);
+    }
+
+    .bubble-row.align-left .speech-bubble::after {
+      left: -1px;
+      transform: translate(-6px, 0) scaleX(0.85);
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .bubble-row.align-right .speech-bubble::after {
+      right: -1px;
+      transform: translate(6px, 0) scaleX(-0.85);
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .bubble-row.align-center .speech-bubble::after {
+      display: none;
+    }
+
+    .bubble-text {
+      font-size: 14px;
+      line-height: 1.48;
+      color: var(--ink);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    .bubble-text em {
+      font-style: normal;
+      font-weight: 700;
+      color: var(--ilya);
+    }
+
+    body.dark .bubble-text em {
+      color: #6ee7b7;
+    }
+
+    .comic-footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    body.is-slides .comic-footer {
+      display: none;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(9, 12, 18, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 12px;
+      backdrop-filter: blur(10px);
+    }
+    .lightbox.open {
+      display: flex;
+    }
+    .lightbox-inner {
+      max-width: 96%;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .lightbox-inner img {
+      max-width: 100%;
+      max-height: 82vh;
+      max-height: 82dvh;
+      border-radius: 16px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    }
+    .lightbox-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .lb-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-family: inherit;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .lb-btn:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+  </style>
+</head>
+<body class="is-slides">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-tag">Обучение</span>
+        <span class="brand-title">Отдел продаж · знакомство с Максом</span>
+      </div>
+      <div class="controls">
+        <div class="seg-group" role="tablist" aria-label="Режим просмотра">
+          <button id="btnSlides" class="seg-btn active" onclick="setMode('slides')">По кадрам</button>
+          <button id="btnFeed" class="seg-btn" onclick="setMode('feed')">Лента</button>
+          <button id="btnGrid" class="seg-btn btn-grid-only" onclick="setMode('grid')">Сетка</button>
+        </div>
+        <button id="btnTheme" class="icon-btn" onclick="toggleTheme()" title="Светлая / тёмная тема" aria-label="Переключить тему">🌙</button>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill"></div>
+    </div>
+  </header>
+
+  <div class="stage">
+    <div class="cast-bar">
+      <div class="cast-pill role-ilya">
+        <img src="images/avatar_ilya.jpg" alt="Илья" />
+        <span>Илья</span>
+        <span class="cast-role">· демо</span>
+      </div>
+      <div class="cast-pill role-max">
+        <img src="images/avatar_max.jpg" alt="Макс" />
+        <span>Макс</span>
+        <span class="cast-role">· ИИ-агент</span>
+      </div>
+      <div class="cast-pill role-denis">
+        <img src="images/avatar_denis.jpg" alt="Денис" />
+        <span>Денис</span>
+        <span class="cast-role">· продажи</span>
+      </div>
+    </div>
+
+    <main id="comicGrid" class="comic-grid mode-slides">
+
+    <article class="comic-panel is-active" data-panel="1">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(1)" title="Открыть кадр крупнее">
+        <span class="panel-badge">1 / 9</span>
+        <div class="caption-box caption-top">Отдел продаж. Короткая планёрка перед демо.</div>
+        <img src="images/panel_01.jpg" alt="Кадр 1" style="object-position: center 23%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Коллеги, у нас десять минут — потом все свободны. Знакомьтесь: <em>Макс</em>, наш ИИ-агент. Испытательный срок он прошёл за три секунды. Пока что это рекорд компании.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="2">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(2)" title="Открыть кадр крупнее">
+        <span class="panel-badge">2 / 9</span>
+        <img src="images/panel_02.jpg" alt="Кадр 2" style="object-position: center 45%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-denis" src="images/avatar_denis.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-denis">Денис</span>
+            <div class="speech-bubble role-denis">
+              <p class="bubble-text">Звучит красиво. Но чем он отличается от обычного чата вроде GigaChat?</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Сейчас покажем на живой задаче. Денис, назови работу, на которую у тебя уходит полдня.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="3">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(3)" title="Открыть кадр крупнее">
+        <span class="panel-badge">3 / 9</span>
+        <img src="images/panel_03.jpg" alt="Кадр 3" style="object-position: center 38%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-denis" src="images/avatar_denis.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-denis">Денис</span>
+            <div class="speech-bubble role-denis">
+              <p class="bubble-text">Таких полно. Например: письма клиентам с полисами, которые истекают в январе. Выгружаю список — и вручную подставляю данные в шаблон. Строка за строкой, письмо за письмом.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Идеальный кейс — разберём его здесь. Макс, что тебе нужно от нас?</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-max" src="images/avatar_max.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-max">Макс</span>
+            <div class="speech-bubble role-max">
+              <p class="bubble-text">Файл со списком и шаблон письма. Больше ничего не прошу.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="4">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(4)" title="Открыть кадр крупнее">
+        <span class="panel-badge">4 / 9</span>
+        <img src="images/panel_04.jpg" alt="Кадр 4" style="object-position: center 28%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-denis" src="images/avatar_denis.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-denis">Денис</span>
+            <div class="speech-bubble role-denis">
+              <p class="bubble-text">Так дайте ему доступ к CRM — пусть сам всё выгрузит!</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Не выйдет — и дело не в характере Макса. <em>Правило безопасности:</em> агенты не подключаются к рабочим системам. Ни CRM, ни почта, ни календари. Никогда.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="5">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(5)" title="Открыть кадр крупнее">
+        <span class="panel-badge">5 / 9</span>
+        <img src="images/panel_05.jpg" alt="Кадр 5" style="object-position: center 22%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-center">
+          <img class="bubble-avatar role-max" src="images/avatar_max.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-max">Макс</span>
+            <div class="speech-bubble role-max">
+              <p class="bubble-text">Слово «никогда» зафиксировал — оно мне нравится. CRM, почта и календарь мне недоступны. Я даже не знаю, когда у вас отпуск. Подозрительно уютно.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="6">
+      <div class="panel-frame" style="--asp: 3 / 4;" onclick="openLightbox(6)" title="Открыть кадр крупнее">
+        <span class="panel-badge">6 / 9</span>
+        <div class="caption-box caption-top">Илья готовит файл для Макса.</div>
+        <img src="images/panel_06.jpg" alt="Кадр 6" style="object-position: center 48%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Поэтому данные готовим сами. Я выгрузил январский список из CRM и убрал лишнее: фамилии, телефоны, адреса. Остались даты, продукт и суммы. Клиенты стали «Клиент №1», «Клиент №2»… Для Макса этого достаточно.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="7">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(7)" title="Открыть кадр крупнее">
+        <span class="panel-badge">7 / 9</span>
+        <div class="caption-box caption-top">Пауза. Денис успевает налить кофе.</div>
+        <img src="images/panel_07.jpg" alt="Кадр 7" style="object-position: center 32%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-max" src="images/avatar_max.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-max">Макс</span>
+            <div class="speech-bubble role-max">
+              <p class="bubble-text">Принято. План: разобрать шаблон, для каждой строки собрать черновик, подставить даты и суммы, отметить строки без данных и свести всё в таблицу. Начинаю.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel" data-panel="8">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(8)" title="Открыть кадр крупнее">
+        <span class="panel-badge">8 / 9</span>
+        <img src="images/panel_08.jpg" alt="Кадр 8" style="object-position: center 24%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-max" src="images/avatar_max.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-max">Макс</span>
+            <div class="speech-bubble role-max">
+              <p class="bubble-text">Готово: 42 черновика. Вместо имён — плейсхолдер [Имя клиента]: настоящих имён у меня нет, и это плюс. В трёх строках сумма не сходится с датой — вынес на отдельный лист. Можно отправлять.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Стоп. Кнопки «отправить» у тебя нет — и не будет. Я проверю письма и разошлю их сам: из рабочей почты, от своего имени.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="comic-panel panel-wide" data-panel="9">
+      <div class="panel-frame" style="--asp: 4 / 5;" onclick="openLightbox(9)" title="Открыть кадр крупнее">
+        <span class="panel-badge">9 / 9</span>
+        <img src="images/panel_09.jpg" alt="Кадр 9" style="object-position: center 30%;" />
+      </div>
+      <div class="dialogue-zone">
+        <div class="bubble-row align-right">
+          <img class="bubble-avatar role-max" src="images/avatar_max.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-max">Макс</span>
+            <div class="speech-bubble role-max">
+              <p class="bubble-text">Принято. «Отправить» заменю на «готово» — безопаснее и почти так же приятно.</p>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-row align-left">
+          <img class="bubble-avatar role-ilya" src="images/avatar_ilya.jpg" alt="" width="40" height="40" />
+          <div class="bubble-stack">
+            <span class="bubble-name name-ilya">Илья</span>
+            <div class="speech-bubble role-ilya">
+              <p class="bubble-text">Вопрос в зал: чем эта работа Макса отличается от того, что делает обычный чат-бот?</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    </main>
+
+    <nav class="slide-nav" aria-label="Навигация по кадрам">
+      <button id="prevSlideBtn" class="nav-btn" onclick="stepSlide(-1)">← Назад</button>
+      <div class="dots-row">
+        <button class="dot-btn active" data-dot="1" onclick="goSlide(1)" aria-label="Кадр 1">1</button>
+        <button class="dot-btn" data-dot="2" onclick="goSlide(2)" aria-label="Кадр 2">2</button>
+        <button class="dot-btn" data-dot="3" onclick="goSlide(3)" aria-label="Кадр 3">3</button>
+        <button class="dot-btn" data-dot="4" onclick="goSlide(4)" aria-label="Кадр 4">4</button>
+        <button class="dot-btn" data-dot="5" onclick="goSlide(5)" aria-label="Кадр 5">5</button>
+        <button class="dot-btn" data-dot="6" onclick="goSlide(6)" aria-label="Кадр 6">6</button>
+        <button class="dot-btn" data-dot="7" onclick="goSlide(7)" aria-label="Кадр 7">7</button>
+        <button class="dot-btn" data-dot="8" onclick="goSlide(8)" aria-label="Кадр 8">8</button>
+        <button class="dot-btn" data-dot="9" onclick="goSlide(9)" aria-label="Кадр 9">9</button>
+      </div>
+      <button id="nextSlideBtn" class="nav-btn" onclick="stepSlide(1)">Далее →</button>
+    </nav>
+
+    <footer class="comic-footer">
+      Нажмите на кадр, чтобы увеличить · 9 кадров · готово для встраивания в iframe
+    </footer>
+  </div>
+
+  <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-inner" onclick="event.stopPropagation()">
+      <img id="lbImg" src="" alt="Полный кадр" />
+      <div class="lightbox-bar">
+        <button class="lb-btn" onclick="stepLightbox(-1)">←</button>
+        <span id="lbCounter" style="color:#e2e8f0;font-size:12.5px;font-weight:700;">1 / 9</span>
+        <button class="lb-btn" onclick="stepLightbox(1)">→</button>
+        <button class="lb-btn" onclick="closeLightbox()">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'slides';
+    let currentSlide = 1;
+    let currentLb = 1;
+
+    function updateProgress() {
+      const fill = document.getElementById('progressFill');
+      if (currentMode === 'slides') {
+        fill.style.width = ((currentSlide / 9) * 100).toFixed(1) + '%';
+      } else {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = maxScroll > 0 ? Math.min(100, Math.max(11.1, (window.scrollY / maxScroll) * 100)) : 100;
+        fill.style.width = pct.toFixed(1) + '%';
+      }
+    }
+
+    function notifyParentHeight() {
+      try {
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({
+            type: 'comic-resize',
+            height: document.documentElement.scrollHeight
+          }, '*');
+        }
+      } catch (e) {}
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      const grid = document.getElementById('comicGrid');
+      grid.classList.remove('mode-slides', 'mode-feed', 'mode-grid');
+      grid.classList.add('mode-' + mode);
+      document.body.classList.toggle('is-slides', mode === 'slides');
+
+      document.getElementById('btnSlides').classList.toggle('active', mode === 'slides');
+      document.getElementById('btnFeed').classList.toggle('active', mode === 'feed');
+      document.getElementById('btnGrid').classList.toggle('active', mode === 'grid');
+
+      updateProgress();
+      notifyParentHeight();
+    }
+
+    function goSlide(num) {
+      currentSlide = Math.max(1, Math.min(9, num));
+      document.querySelectorAll('.comic-panel').forEach((el) => {
+        el.classList.toggle('is-active', Number(el.dataset.panel) === currentSlide);
+      });
+      document.querySelectorAll('.dot-btn').forEach((el) => {
+        el.classList.toggle('active', Number(el.dataset.dot) === currentSlide);
+      });
+      document.getElementById('prevSlideBtn').disabled = currentSlide === 1;
+      document.getElementById('nextSlideBtn').disabled = currentSlide === 9;
+      updateProgress();
+      notifyParentHeight();
+    }
+
+    function stepSlide(delta) {
+      goSlide(currentSlide + delta);
+    }
+
+    function toggleTheme() {
+      const isDark = document.body.classList.toggle('dark');
+      document.getElementById('btnTheme').textContent = isDark ? '☀️' : '🌙';
+    }
+
+    function openLightbox(num) {
+      currentLb = num;
+      updateLightbox();
+      document.getElementById('lightbox').classList.add('open');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+
+    function stepLightbox(delta) {
+      currentLb = ((currentLb - 1 + delta + 9) % 9) + 1;
+      updateLightbox();
+    }
+
+    function updateLightbox() {
+      const imgEl = document.querySelector('[data-panel="' + currentLb + '"] .panel-frame img');
+      if (imgEl) document.getElementById('lbImg').src = imgEl.src;
+      document.getElementById('lbCounter').textContent = currentLb + ' / 9';
+    }
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    const gridEl = document.getElementById('comicGrid');
+    gridEl.addEventListener('touchstart', (e) => {
+      if (currentMode !== 'slides') return;
+      touchStartX = e.changedTouches[0].clientX;
+      touchStartY = e.changedTouches[0].clientY;
+    }, { passive: true });
+    gridEl.addEventListener('touchend', (e) => {
+      if (currentMode !== 'slides') return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+        if (dx < 0 && currentSlide < 9) stepSlide(1);
+        if (dx > 0 && currentSlide > 1) stepSlide(-1);
+      }
+    }, { passive: true });
+
+    document.addEventListener('keydown', (e) => {
+      const lb = document.getElementById('lightbox');
+      if (lb.classList.contains('open')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') stepLightbox(1);
+        if (e.key === 'ArrowLeft') stepLightbox(-1);
+        return;
+      }
+      if (currentMode === 'slides') {
+        if (e.key === 'ArrowRight') stepSlide(1);
+        if (e.key === 'ArrowLeft') stepSlide(-1);
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      if (currentMode !== 'slides') updateProgress();
+    }, { passive: true });
+
+    (function initFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const m = params.get('mode');
+      const t = params.get('theme');
+      if (t === 'dark') toggleTheme();
+      if (m === 'feed' || m === 'grid' || m === 'slides') {
+        setMode(m);
+      } else {
+        setMode('slides');
+      }
+      goSlide(1);
+    })();
+
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(notifyParentHeight).observe(document.body);
+    }
+  </script>
+</body>
+</html>
