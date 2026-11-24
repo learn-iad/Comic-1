@@ -37,6 +37,7 @@
       --bar-bg: rgba(255, 255, 255, 0.78);
       --progress: linear-gradient(90deg, #10b981, #06b6d4);
       --avatar-size: 40px;
+      --slides-shell-h: 440px;
     }
 
     body.dark {
@@ -289,8 +290,8 @@
 
     .comic-grid.mode-feed .panel-frame {
       aspect-ratio: var(--asp, 4 / 5);
-      max-height: 52vh;
-      max-height: 52dvh;
+      max-height: 42vh;
+      max-height: 42dvh;
     }
 
     .comic-grid.mode-grid {
@@ -313,8 +314,8 @@
       }
       .comic-grid.mode-grid .panel-frame {
         aspect-ratio: var(--asp, 4 / 5);
-        max-height: 46vh;
-        max-height: 46dvh;
+        max-height: 38vh;
+        max-height: 38dvh;
       }
     }
 
@@ -323,12 +324,11 @@
     }
 
     body.is-slides .stage {
-      padding: 10px 14px 14px;
-      min-height: calc(100vh - 56px);
-      min-height: calc(100dvh - 56px);
+      padding: 8px 14px 12px;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
       align-items: center;
     }
 
@@ -344,14 +344,18 @@
     .comic-grid.mode-slides .comic-panel.is-active {
       display: flex;
       flex-direction: column;
-      max-height: calc(100vh - 120px);
-      max-height: calc(100dvh - 120px);
+      height: var(--slides-shell-h, 440px);
+      max-height: var(--slides-shell-h, 440px);
+      min-height: 0;
+      overflow: hidden;
     }
 
     .comic-grid.mode-slides .panel-frame {
-      height: 44vh;
-      height: 44dvh;
-      min-height: 210px;
+      height: auto;
+      max-height: min(36vh, 200px);
+      max-height: min(36dvh, 200px);
+      min-height: 140px;
+      aspect-ratio: 4 / 3;
       flex-shrink: 0;
     }
 
@@ -363,23 +367,27 @@
     @media (min-width: 620px) {
       .comic-grid.mode-slides .comic-panel.is-active {
         display: grid;
-        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
         align-items: stretch;
-        height: min(580px, calc(100vh - 120px));
-        height: min(580px, calc(100dvh - 120px));
-        max-height: none;
+        height: var(--slides-shell-h, 440px);
+        max-height: var(--slides-shell-h, 440px);
       }
 
       .comic-grid.mode-slides .panel-frame {
         height: 100%;
+        max-height: none;
+        min-height: 0;
+        aspect-ratio: auto;
         border-bottom: none;
         border-right: 1px solid var(--border-strong);
       }
 
       .comic-grid.mode-slides .dialogue-zone {
         justify-content: center;
-        padding: 20px 18px;
-        gap: 14px;
+        padding: 14px 16px;
+        gap: 12px;
+        min-height: 0;
+        overflow-y: auto;
       }
     }
 
@@ -531,6 +539,7 @@
     body.is-compact .comic-grid.mode-slides .comic-panel.is-active {
       flex: 1 1 auto;
       min-height: 0;
+      height: auto;
       max-height: none;
       display: flex;
       flex-direction: column;
@@ -613,14 +622,14 @@
     @media (max-width: 619px) {
       body.is-slides:not(.is-compact) .comic-grid.mode-slides .panel-frame {
         height: auto;
-        max-height: 36vh;
-        max-height: 36dvh;
-        min-height: 140px;
+        max-height: min(32vh, 185px);
+        max-height: min(32dvh, 185px);
+        min-height: 128px;
         aspect-ratio: 4 / 3;
       }
 
       body.is-slides:not(.is-compact) .comic-grid.mode-slides .comic-panel.is-active {
-        max-height: calc(100dvh - 130px);
+        max-height: var(--slides-shell-h, 400px);
       }
     }
 
@@ -1272,6 +1281,7 @@
 
       updateProgress();
       updateCompactLayout();
+      updateSlidesShellHeight();
       notifyParentHeight();
     }
 
@@ -1359,6 +1369,18 @@
       if (currentMode !== 'slides') updateProgress();
     }, { passive: true });
 
+    function updateSlidesShellHeight() {
+      if (currentMode !== 'slides') return;
+      const h = window.innerHeight;
+      const inFrame = window.self !== window.top;
+      const narrow = window.matchMedia('(max-width: 619px)').matches;
+      const topReserve = document.body.classList.contains('is-compact') ? 96 : inFrame ? 128 : 148;
+      const cap = narrow ? 400 : inFrame ? 420 : 440;
+      const floor = narrow ? 300 : 340;
+      const shell = Math.round(Math.min(cap, Math.max(floor, h - topReserve)));
+      document.documentElement.style.setProperty('--slides-shell-h', shell + 'px');
+    }
+
     function updateCompactLayout() {
       const params = new URLSearchParams(window.location.search);
       const forceEmbed = params.get('embed') === '1';
@@ -1381,6 +1403,7 @@
         document.documentElement.style.removeProperty('--app-h');
         document.documentElement.style.removeProperty('--panel-h');
       }
+      updateSlidesShellHeight();
     }
 
     (function initFromQuery() {
