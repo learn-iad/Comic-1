@@ -73,6 +73,18 @@
       overflow-x: hidden;
     }
 
+    html.is-compact,
+    html.is-compact body {
+      height: var(--app-h, 100%);
+      max-height: var(--app-h, 100%);
+      overflow: hidden;
+    }
+
+    body.is-compact.is-slides {
+      display: flex;
+      flex-direction: column;
+    }
+
     body {
       font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: var(--bg);
@@ -455,6 +467,160 @@
       .nav-btn {
         padding: 8px 12px;
         font-size: 12px;
+      }
+    }
+
+    .slide-counter {
+      display: none;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      min-width: 3.2rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    /* Компактный режим: короткий iframe / узкий экран */
+    body.is-compact .topbar-inner {
+      padding: 6px 8px;
+      min-height: 40px;
+      gap: 6px;
+    }
+
+    body.is-compact .brand-title {
+      display: none;
+    }
+
+    body.is-compact .seg-group .seg-btn:not(.active) {
+      display: none;
+    }
+
+    body.is-compact .seg-group .seg-btn.active {
+      pointer-events: none;
+    }
+
+    body.is-compact .icon-btn {
+      width: 32px;
+      height: 32px;
+      font-size: 14px;
+    }
+
+    body.is-compact .topbar {
+      flex-shrink: 0;
+    }
+
+    body.is-compact.is-slides .stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding: 6px 8px 4px;
+      justify-content: flex-start;
+      overflow: hidden;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body.is-compact .comic-grid.mode-slides {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    body.is-compact .comic-grid.mode-slides .comic-panel.is-active {
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: none;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    body.is-compact .comic-grid.mode-slides .panel-frame {
+      flex: 0 0 var(--panel-h, 100px);
+      width: 100%;
+      height: var(--panel-h, 100px);
+      min-height: 0;
+      max-height: var(--panel-h, 100px);
+    }
+
+    body.is-compact .panel-badge {
+      top: 6px;
+      right: 6px;
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+
+    body.is-compact .caption-box {
+      top: 6px;
+      left: 6px;
+      font-size: 10px;
+      padding: 4px 8px;
+      max-width: calc(100% - 56px);
+    }
+
+    body.is-compact .comic-grid.mode-slides .dialogue-zone {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      padding: 10px 10px 12px;
+      gap: 10px;
+    }
+
+    body.is-compact {
+      --avatar-size: 32px;
+      --radius-bubble: 14px;
+    }
+
+    body.is-compact .bubble-text {
+      font-size: 13px;
+      line-height: 1.44;
+    }
+
+    body.is-compact .speech-bubble {
+      padding: 8px 11px 9px;
+    }
+
+    body.is-compact .bubble-name {
+      font-size: 10px;
+    }
+
+    body.is-compact .slide-nav {
+      flex-shrink: 0;
+      margin-top: 6px;
+      gap: 6px;
+    }
+
+    body.is-compact .dots-row {
+      display: none;
+    }
+
+    body.is-compact .slide-counter {
+      display: block;
+    }
+
+    body.is-compact .nav-btn {
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 619px) {
+      body.is-slides:not(.is-compact) .comic-grid.mode-slides .panel-frame {
+        height: auto;
+        max-height: 36vh;
+        max-height: 36dvh;
+        min-height: 140px;
+        aspect-ratio: 4 / 3;
+      }
+
+      body.is-slides:not(.is-compact) .comic-grid.mode-slides .comic-panel.is-active {
+        max-height: calc(100dvh - 130px);
       }
     }
 
@@ -1034,6 +1200,7 @@
 
     <nav class="slide-nav" aria-label="Навигация по кадрам">
       <button id="prevSlideBtn" class="nav-btn" onclick="stepSlide(-1)">← Назад</button>
+      <span id="slideCounter" class="slide-counter" aria-live="polite">1 / 9</span>
       <div class="dots-row">
         <button class="dot-btn active" data-dot="1" onclick="goSlide(1)" aria-label="Кадр 1">1</button>
         <button class="dot-btn" data-dot="2" onclick="goSlide(2)" aria-label="Кадр 2">2</button>
@@ -1104,6 +1271,7 @@
       document.getElementById('btnGrid').classList.toggle('active', mode === 'grid');
 
       updateProgress();
+      updateCompactLayout();
       notifyParentHeight();
     }
 
@@ -1117,6 +1285,10 @@
       });
       document.getElementById('prevSlideBtn').disabled = currentSlide === 1;
       document.getElementById('nextSlideBtn').disabled = currentSlide === 9;
+      const counter = document.getElementById('slideCounter');
+      if (counter) counter.textContent = currentSlide + ' / 9';
+      const activeZone = document.querySelector('.comic-panel.is-active .dialogue-zone');
+      if (activeZone) activeZone.scrollTop = 0;
       updateProgress();
       notifyParentHeight();
     }
@@ -1187,6 +1359,30 @@
       if (currentMode !== 'slides') updateProgress();
     }, { passive: true });
 
+    function updateCompactLayout() {
+      const params = new URLSearchParams(window.location.search);
+      const forceEmbed = params.get('embed') === '1';
+      const inFrame = window.self !== window.top;
+      const narrow = window.matchMedia('(max-width: 619px)').matches;
+      const shortViewport = window.innerHeight <= 640;
+      const compact =
+        forceEmbed ||
+        (narrow && currentMode === 'slides') ||
+        (inFrame && shortViewport && currentMode === 'slides');
+
+      document.documentElement.classList.toggle('is-compact', compact);
+      document.body.classList.toggle('is-compact', compact);
+      if (compact) {
+        const h = window.innerHeight;
+        const panelH = Math.round(Math.min(120, Math.max(78, h * 0.24)));
+        document.documentElement.style.setProperty('--app-h', h + 'px');
+        document.documentElement.style.setProperty('--panel-h', panelH + 'px');
+      } else {
+        document.documentElement.style.removeProperty('--app-h');
+        document.documentElement.style.removeProperty('--panel-h');
+      }
+    }
+
     (function initFromQuery() {
       const params = new URLSearchParams(window.location.search);
       const m = params.get('mode');
@@ -1198,7 +1394,11 @@
         setMode('slides');
       }
       goSlide(1);
+      updateCompactLayout();
     })();
+
+    window.addEventListener('resize', updateCompactLayout, { passive: true });
+    window.matchMedia('(max-width: 619px)').addEventListener('change', updateCompactLayout);
 
     if (typeof ResizeObserver !== 'undefined') {
       new ResizeObserver(notifyParentHeight).observe(document.body);
